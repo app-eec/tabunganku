@@ -7,18 +7,16 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>TabunganKu - Aplikasi Tabungan Pribadi</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'" />
   <!-- Chart.js untuk Visualisasi Analitik -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- SheetJS untuk Export File Excel (.xlsx) -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <style>
     /* Reset & Full Page Overlay untuk menutupi seluruh elemen bawaan Blogger tanpa edit XML */
@@ -63,6 +61,18 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    #blogger-app-root { height: 100vh !important; height: 100dvh !important; }
+    @media screen and (max-width: 767px) {
+      input, select, textarea { font-size: 16px !important; }
+      .rt thead { display: none; }
+      .rt, .rt tbody { display: block; }
+      .rt tr { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "d d n" "j k a" "c c c"; gap: .3rem .6rem; align-items: center; padding: .75rem 1rem; border-bottom: 1px solid #f1f5f9; }
+      .rt tr:has(td[colspan]) { display: block; }
+      .rt td { display: block; padding: 0 !important; text-align: left !important; max-width: none !important; white-space: normal !important; }
+      .x-d { grid-area: d; } .x-n { grid-area: n; text-align: right !important; } .x-j { grid-area: j; }
+      .x-k { grid-area: k; } .x-a { grid-area: a; text-align: right !important; } .x-c { grid-area: c; }
+    }
+
     /* Print Stylesheet untuk Cetak Laporan */
     @media print {
       #blogger-app-root {
@@ -87,10 +97,10 @@
 <div id="blogger-app-root" class="flex flex-col">
 
   <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toast-container" class="fixed top-4 right-4 z-[2147483647] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+  <div id="toast-container" class="fixed top-2 sm:top-4 right-0 sm:right-4 z-[2147483647] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-3 sm:px-0"></div>
 
   <!-- MODAL KONFIRMASI CUSTOM (PENGGANTI ALERT & CONFIRM) -->
-  <div id="custom-confirm-modal" class="hidden fixed inset-0 z-[2147483646] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+  <div id="custom-confirm-modal" class="hidden fixed inset-0 z-[2147483646] bg-slate-900/60 flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 fade-in">
       <div class="flex items-start gap-4">
         <div id="confirm-icon-box" class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 text-xl">
@@ -113,7 +123,7 @@
   </div>
 
   <!-- LOADING OVERLAY GLOBAL -->
-  <div id="global-loader" class="hidden fixed inset-0 z-[2147483645] bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+  <div id="global-loader" class="hidden fixed inset-0 z-[2147483645] bg-slate-900/40 flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-2xl px-6 py-5 shadow-2xl flex items-center gap-4 border border-slate-100">
       <div class="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
       <div>
@@ -154,7 +164,7 @@
               <i class="fa-solid fa-user-shield"></i>
             </span>
             <input type="text" id="login-username" required autocomplete="username" placeholder="Masukkan username"
-              class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-600 focus:ring-3 focus:ring-emerald-500/15 outline-none text-sm font-medium transition" />
+              class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-600 outline-none text-sm font-medium transition" />
           </div>
         </div>
 
@@ -165,7 +175,7 @@
               <i class="fa-solid fa-lock"></i>
             </span>
             <input type="password" id="login-password" required autocomplete="current-password" placeholder="Masukkan password"
-              class="w-full pl-11 pr-11 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-600 focus:ring-3 focus:ring-emerald-500/15 outline-none text-sm font-medium transition" />
+              class="w-full pl-11 pr-11 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-600 outline-none text-sm font-medium transition" />
             <button type="button" id="toggle-login-pass" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600">
               <i class="fa-solid fa-eye"></i>
             </button>
@@ -277,7 +287,7 @@
     <div class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
 
       <!-- TOPBAR -->
-      <header class="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 flex items-center justify-between shrink-0 no-print">
+      <header style="padding-top:max(.875rem,env(safe-area-inset-top))" class="bg-white border-b border-slate-200/80 px-4 sm:px-6 py-3.5 flex items-center justify-between shrink-0 no-print">
         <div class="flex items-center gap-3">
           <div class="md:hidden w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
             <i class="fa-solid fa-vault"></i>
@@ -304,7 +314,7 @@
       </header>
 
       <!-- MAIN SCROLLABLE VIEWPORT -->
-      <main class="flex-1 overflow-y-auto custom-scroll p-4 sm:p-6 pb-24 md:pb-8">
+      <main class="flex-1 overflow-y-auto custom-scroll p-4 sm:p-6 pb-6 md:pb-8">
 
         <!-- HEADER CETAK LAPORAN (HANYA MUNCUL SAAT PRINT) -->
         <div class="hidden print-only mb-6 border-b-2 border-slate-800 pb-4">
@@ -317,9 +327,9 @@
         <!-- ========================================== -->
         <section id="view-dashboard" class="space-y-6 fade-in">
           <!-- 3 Kartu Ringkasan Utama -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             <!-- Total Saldo -->
-            <div class="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 text-white shadow-lg shadow-emerald-600/15 relative overflow-hidden">
+            <div class="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-2xl p-5 col-span-2 sm:col-span-1 text-white shadow-lg shadow-emerald-600/15 relative overflow-hidden">
               <div class="absolute -right-4 -bottom-4 text-white/10 text-7xl">
                 <i class="fa-solid fa-wallet"></i>
               </div>
@@ -333,26 +343,26 @@
             </div>
 
             <!-- Total Setoran Masuk -->
-            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 flex flex-col justify-between">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Setoran (+)</span>
                 <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
                   <i class="fa-solid fa-arrow-trend-up"></i>
                 </span>
               </div>
-              <h3 id="stat-total-setor" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">Rp 0</h3>
+              <h3 id="stat-total-setor" class="text-base sm:text-2xl font-extrabold text-slate-900 mt-2">Rp 0</h3>
               <p id="stat-count-setor" class="text-xs text-emerald-600 font-semibold mt-2">0x Setor Tabungan</p>
             </div>
 
             <!-- Total Penarikan Keluar -->
-            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 flex flex-col justify-between">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Penarikan (-)</span>
                 <span class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
                   <i class="fa-solid fa-arrow-trend-down"></i>
                 </span>
               </div>
-              <h3 id="stat-total-tarik" class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">Rp 0</h3>
+              <h3 id="stat-total-tarik" class="text-base sm:text-2xl font-extrabold text-slate-900 mt-2">Rp 0</h3>
               <p id="stat-count-tarik" class="text-xs text-rose-600 font-semibold mt-2">0x Penarikan Dana</p>
             </div>
           </div>
@@ -360,7 +370,7 @@
           <!-- Baris Grafik Visualisasi -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Grafik Tren Arus Kas Bulanan -->
-            <div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
+            <div class="lg:col-span-2 bg-white rounded-2xl p-5 border border-slate-200/80">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                 <div>
                   <h3 class="text-sm font-extrabold text-slate-900">Grafik Arus Kas Tabungan (6 Bulan Terakhir)</h3>
@@ -373,7 +383,7 @@
             </div>
 
             <!-- Grafik Komposisi Kategori Setoran -->
-            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex flex-col">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 flex flex-col">
               <div class="mb-4">
                 <h3 class="text-sm font-extrabold text-slate-900">Sumber Setoran Tabungan</h3>
                 <p class="text-xs text-slate-500">Proporsi tabungan masuk berdasarkan kategori</p>
@@ -385,7 +395,7 @@
           </div>
 
           <!-- 5 Mutasi Transaksi Terakhir -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
             <div class="p-5 border-b border-slate-100 flex items-center justify-between">
               <div>
                 <h3 class="text-sm font-extrabold text-slate-900">5 Mutasi Transaksi Terakhir</h3>
@@ -397,7 +407,7 @@
               </button>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="w-full text-left border-collapse rt">
                 <thead>
                   <tr class="bg-slate-50/80 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
                     <th class="py-3 px-4">Tanggal</th>
@@ -418,7 +428,7 @@
         <!-- ========================================== -->
         <section id="view-transaksi" class="hidden space-y-6 fade-in">
           <!-- Bar Kontrol, Filter & Pencarian -->
-          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs space-y-4 no-print">
+          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 space-y-4 no-print">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div>
                 <h2 class="text-base font-extrabold text-slate-900">Manajemen Riwayat Transaksi</h2>
@@ -441,8 +451,8 @@
             </div>
 
             <!-- Filter Inputs -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div class="relative">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="relative col-span-2 lg:col-span-1">
                 <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 text-xs">
                   <i class="fa-solid fa-magnifying-glass"></i>
                 </span>
@@ -452,9 +462,9 @@
 
               <div>
                 <select id="filter-jenis" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-600 outline-none text-xs font-medium">
-                  <option value="ALL">Semua Jenis (Setor & Tarik)</option>
-                  <option value="Setor">Hanya Setor Tabungan (+)</option>
-                  <option value="Tarik">Hanya Penarikan Dana (-)</option>
+                  <option value="ALL">Semua Jenis</option>
+                  <option value="Setor">Setor (+)</option>
+                  <option value="Tarik">Tarik (-)</option>
                 </select>
               </div>
 
@@ -464,7 +474,7 @@
                 </select>
               </div>
 
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 col-span-2 lg:col-span-1">
                 <input type="month" id="filter-bulan" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-600 outline-none text-xs font-medium" />
                 <button type="button" id="btn-reset-filter" title="Reset Filter" class="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition">
                   Reset
@@ -474,25 +484,25 @@
           </div>
 
           <!-- Ringkasan Hasil Filter -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div class="bg-white px-4 py-3 rounded-xl border border-slate-200/80 flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">Setoran Terfilter:</span>
-              <span id="filtered-sum-setor" class="text-sm font-extrabold text-emerald-600">Rp 0</span>
+          <div class="grid grid-cols-3 gap-2 sm:gap-3">
+            <div class="bg-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-0.5">
+              <span class="text-xs text-slate-500 font-medium">Setoran<span class="hidden sm:inline"> Terfilter</span>:</span>
+              <span id="filtered-sum-setor" class="text-xs sm:text-sm font-extrabold text-emerald-600">Rp 0</span>
             </div>
-            <div class="bg-white px-4 py-3 rounded-xl border border-slate-200/80 flex items-center justify-between">
-              <span class="text-xs text-slate-500 font-medium">Penarikan Terfilter:</span>
-              <span id="filtered-sum-tarik" class="text-sm font-extrabold text-rose-600">Rp 0</span>
+            <div class="bg-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-0.5">
+              <span class="text-xs text-slate-500 font-medium">Penarikan<span class="hidden sm:inline"> Terfilter</span>:</span>
+              <span id="filtered-sum-tarik" class="text-xs sm:text-sm font-extrabold text-rose-600">Rp 0</span>
             </div>
-            <div class="bg-white px-4 py-3 rounded-xl border border-slate-200/80 flex items-center justify-between">
+            <div class="bg-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-0.5">
               <span class="text-xs text-slate-500 font-medium">Selisih Bersih:</span>
-              <span id="filtered-sum-net" class="text-sm font-extrabold text-slate-900">Rp 0</span>
+              <span id="filtered-sum-net" class="text-xs sm:text-sm font-extrabold text-slate-900">Rp 0</span>
             </div>
           </div>
 
           <!-- Tabel Transaksi Utama -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
             <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+              <table class="w-full text-left border-collapse rt">
                 <thead>
                   <tr class="bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">
                     <th class="py-3.5 px-4">ID & Tanggal</th>
@@ -515,7 +525,7 @@
         <section id="view-kategori" class="hidden space-y-6 fade-in">
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Form Tambah / Edit Kategori -->
-            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs h-fit">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 h-fit">
               <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-4">
                 <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
                   <i class="fa-solid fa-tag"></i>
@@ -557,7 +567,7 @@
             </div>
 
             <!-- Tabel Daftar Kategori -->
-            <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
               <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h3 class="text-base font-extrabold text-slate-900">Daftar Kategori Transaksi</h3>
@@ -569,7 +579,7 @@
               </div>
 
               <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse rt">
                   <thead>
                     <tr class="bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-200">
                       <th class="py-3.5 px-4">Nama Kategori</th>
@@ -619,7 +629,7 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- KARTU KIRI: BACKUP DATA (UNDUH) -->
-            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-5">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 flex flex-col justify-between space-y-5">
               <div class="space-y-3">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
@@ -654,7 +664,7 @@
             </div>
 
             <!-- KARTU KANAN: RESTORE DATA (UNGGAH & PULIHKAN) -->
-            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-5">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200/80 flex flex-col justify-between space-y-5">
               <div class="space-y-4">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
@@ -669,7 +679,7 @@
                 <!-- File Upload Box -->
                 <label for="restore-file-input" class="block border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-5 text-center cursor-pointer bg-slate-50/70 hover:bg-emerald-50/30 transition">
                   <input type="file" id="restore-file-input" accept=".json,application/json" class="hidden" />
-                  <div class="w-11 h-11 rounded-full bg-white shadow-xs border border-slate-200 flex items-center justify-center mx-auto text-emerald-600 text-lg mb-2">
+                  <div class="w-11 h-11 rounded-full bg-white border border-slate-200 flex items-center justify-center mx-auto text-emerald-600 text-lg mb-2">
                     <i class="fa-solid fa-file-arrow-up"></i>
                   </div>
                   <p id="restore-file-label" class="text-xs font-bold text-slate-800">Klik untuk memilih file Backup (.JSON)</p>
@@ -730,7 +740,7 @@
         <section id="view-pengaturan" class="hidden space-y-6 fade-in">
           <div class="max-w-xl">
             <!-- Form Ganti Password Admin -->
-            <form id="form-password" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-5">
+            <form id="form-password" class="bg-white rounded-2xl p-6 border border-slate-200/80 space-y-5">
               <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
                 <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
                   <i class="fa-solid fa-key"></i>
@@ -770,7 +780,7 @@
       </main>
 
       <!-- BOTTOM NAVIGATION BAR (KHUSUS MOBILE) -->
-      <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-1 py-1.5 flex items-center justify-around z-40 no-print">
+      <nav class="md:hidden shrink-0 bg-white border-t border-slate-200 px-1 pt-1.5 flex items-center justify-around no-print" style="padding-bottom:max(.375rem,env(safe-area-inset-bottom))">
         <button type="button" data-nav="dashboard" class="nav-btn-mobile flex flex-col items-center py-1 px-2 rounded-xl text-xs font-bold transition">
           <i class="fa-solid fa-chart-pie text-base mb-0.5"></i>
           <span class="text-[10px]">Dashboard</span>
@@ -798,19 +808,19 @@
   <!-- ========================================== -->
   <!-- MODAL FORM TAMBAH / EDIT TRANSAKSI         -->
   <!-- ========================================== -->
-  <div id="modal-transaksi" class="hidden fixed inset-0 z-[2147483644] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden fade-in">
+  <div id="modal-transaksi" class="hidden fixed inset-0 z-[2147483644] bg-slate-900/60 flex items-end sm:items-center justify-center p-0 sm:p-4 no-print">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden fade-in">
       <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-2.5">
           <i class="fa-solid fa-receipt text-emerald-400"></i>
           <h3 id="modal-trx-title" class="text-base font-extrabold">Catat Transaksi Tabungan</h3>
         </div>
-        <button type="button" id="btn-close-modal-trx" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+        <button type="button" id="btn-close-modal-trx" class="w-9 h-9 md:w-8 md:h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <form id="form-transaksi" class="p-6 space-y-4 max-h-[82vh] overflow-y-auto custom-scroll">
+      <form id="form-transaksi" class="p-6 space-y-4 max-h-[80dvh] overflow-y-auto custom-scroll">
         <input type="hidden" id="trx-id" />
 
         <!-- Pilihan Jenis Transaksi -->
@@ -902,6 +912,7 @@ const STORAGE_KEYS = {
 // State Aplikasi
 let appState = {
   currentUser: null,
+  token: null,
   transactions: [],
   categories: [],
   activeMenu: 'dashboard',
@@ -1097,28 +1108,84 @@ function initPreviewStorage() {
 // KOMUNIKASI API (PREVIEW vs GOOGLE APPS SCRIPT)
 // ==========================================
 async function callBackend(action, payload = {}) {
-  if (IS_PREVIEW) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(handlePreviewBackend(action, payload));
-      }, 250);
-    });
-  }
-
+  if (IS_PREVIEW) return handlePreviewBackend(action, payload);
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 30000);
   try {
     const response = await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, ...payload })
+      body: JSON.stringify({ action, token: appState.token, ...payload }),
+      signal: ctl.signal
     });
-    const result = await response.json();
-    return result;
+    const data = await response.json();
+    if (data.code === 'AUTH' && appState.currentUser) forceLogout();
+    return data;
   } catch (error) {
     return {
       status: 'error',
-      message: 'Gagal terhubung ke server Google Apps Script. Pastikan GAS_URL sudah benar dan di-deploy sebagai Anyone.'
+      message: error.name === 'AbortError'
+        ? 'Server terlalu lama merespons. Coba lagi.'
+        : 'Gagal terhubung ke server Google Apps Script. Pastikan GAS_URL sudah benar dan di-deploy sebagai Anyone.'
     };
+  } finally {
+    clearTimeout(timer);
   }
+}
+
+// Token ditolak server (kedaluwarsa): kembali ke layar login
+function forceLogout() {
+  sessionStorage.removeItem(STORAGE_KEYS.SESSION);
+  appState.currentUser = null;
+  appState.token = null;
+  document.getElementById('app-screen').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-password').value = '';
+}
+
+// Terapkan respons server (daftar penuh ATAU hanya item yang berubah) ke state lokal
+function syncTrx(res) {
+  if (Array.isArray(res.transactions)) appState.transactions = sortTransactionsNewestFirst(res.transactions);
+  else if (res.transaction) {
+    const t = res.transaction, cur = appState.transactions.find(x => x.ID_Transaksi === t.ID_Transaksi);
+    if (cur) Object.assign(cur, t); else appState.transactions.push(t);
+    appState.transactions = sortTransactionsNewestFirst(appState.transactions);
+  } else if (res.id) appState.transactions = appState.transactions.filter(x => x.ID_Transaksi !== res.id);
+  saveSessionLocal();
+}
+function syncKat(res) {
+  if (Array.isArray(res.categories)) appState.categories = res.categories;
+  else if (res.category) {
+    const k = res.category, i = appState.categories.findIndex(x => x.ID_Kategori === k.ID_Kategori);
+    if (i < 0) appState.categories.push(k); else appState.categories[i] = k;
+  } else if (res.id) appState.categories = appState.categories.filter(x => x.ID_Kategori !== res.id);
+  appState.categories = sortCategoriesAZ(appState.categories);
+  saveSessionLocal();
+}
+
+async function refreshData(silent) {
+  if (!silent) showLoader('Menyinkronkan database...');
+  const res = await callBackend('getInitialData', { username: appState.currentUser?.Username || 'admin' });
+  if (!silent) hideLoader();
+  if (res.status === 'success') {
+    appState.currentUser = { ...res.user };
+    syncTrx(res);
+    syncKat(res);
+    renderAllViews();
+    if (!silent) showToast('Data berhasil disinkronkan!', 'success');
+  } else if (!silent || res.code === 'AUTH') showToast(res.message || 'Gagal menyinkronkan data.', 'error');
+}
+
+let xlsxPromise = null;
+function loadXlsx() {
+  if (window.XLSX) return Promise.resolve(true);
+  return xlsxPromise = xlsxPromise || new Promise(resolve => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload = () => resolve(true);
+    s.onerror = () => { xlsxPromise = null; resolve(false); };
+    document.head.appendChild(s);
+  });
 }
 
 function handlePreviewBackend(action, payload) {
@@ -1132,15 +1199,15 @@ function handlePreviewBackend(action, payload) {
       const u = (payload.username || '').trim().toLowerCase();
       const p = payload.password || '';
       const isValidAdmin = (u === storedUser.Username.toLowerCase() && (p === storedUser.Password || p === '123456' || p === 'edudigital' || p === 'admin2026'));
-      const isValidPeserta = (u === 'peserta' && (p === '123456' || p === 'edudigital'));
 
-      if (isValidAdmin || isValidPeserta) {
+      if (isValidAdmin) {
         const currentNowStr = getNowTimestampIndo();
         storedUser.Terakhir_Backup = currentNowStr;
         localStorage.setItem(STORAGE_KEYS.PREVIEW_USER, JSON.stringify(storedUser));
 
         return {
           status: 'success',
+          token: 'preview',
           user: {
             Username: storedUser.Username,
             Nama_Lengkap: storedUser.Nama_Lengkap,
@@ -1343,12 +1410,8 @@ function calculateSummary() {
 
 function saveSessionLocal() {
   if (appState.currentUser) {
-    sessionStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(appState.currentUser));
+    sessionStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify({ token: appState.token, user: appState.currentUser, transactions: appState.transactions, categories: appState.categories }));
   }
-}
-
-function getDisplayBackupTime() {
-  return getNowTimestampIndo();
 }
 
 // ==========================================
@@ -1390,24 +1453,28 @@ function switchMenu(menuKey) {
     document.getElementById('topbar-title').textContent = titles[menuKey][0];
     document.getElementById('topbar-subtitle').textContent = titles[menuKey][1];
   }
+  if (appState.currentUser) renderView(menuKey);
 }
 
 // ==========================================
 // RENDER SELURUH KOMPONEN UI
 // ==========================================
+function renderSidebar() {
+  document.getElementById('sidebar-admin-name').textContent = appState.currentUser?.Nama_Lengkap || 'Administrator Tabungan';
+  document.getElementById('sidebar-last-backup').textContent = getNowTimestampIndo();
+}
+
+function renderView(key) {
+  if (key === 'dashboard') renderDashboard();
+  else if (key === 'transaksi') { populateCategoryFilter(); renderTransactionsTable(); }
+  else if (key === 'kategori') renderKategoriView();
+  else if (key === 'backup') renderBackupView();
+}
+
 function renderAllViews() {
   if (!appState.currentUser) return;
-
-  // Info Sidebar
-  document.getElementById('sidebar-admin-name').textContent = appState.currentUser.Nama_Lengkap || 'Administrator Tabungan';
-  document.getElementById('sidebar-last-backup').textContent = getDisplayBackupTime();
-
-  renderDashboard();
-  populateCategoryFilter();
-  populateTransactionModalCategories();
-  renderTransactionsTable();
-  renderKategoriView();
-  renderBackupView();
+  renderSidebar();
+  renderView(appState.activeMenu);
 }
 
 // ==========================================
@@ -1425,8 +1492,7 @@ function renderDashboard() {
 
   // Render 5 Mutasi Transaksi Terakhir (Data Terbaru di Atas)
   const recentTbody = document.getElementById('recent-transactions-tbody');
-  const sorted = sortTransactionsNewestFirst(appState.transactions);
-  const recent5 = sorted.slice(0, 5);
+  const recent5 = appState.transactions.slice(0, 5);
 
   if (recent5.length === 0) {
     recentTbody.innerHTML = `
@@ -1439,16 +1505,16 @@ function renderDashboard() {
       const isSetor = item.Jenis === 'Setor';
       return `
         <tr class="hover:bg-slate-50/80 transition">
-          <td class="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap">${formatDateIndo(item.Tanggal)}</td>
-          <td class="py-3 px-4">
+          <td class="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap x-d">${formatDateIndo(item.Tanggal)}</td>
+          <td class="py-3 px-4 x-j">
             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${isSetor ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}">
               <i class="fa-solid ${isSetor ? 'fa-arrow-up' : 'fa-arrow-down'} text-[9px]"></i>
               ${item.Jenis}
             </span>
           </td>
-          <td class="py-3 px-4 font-medium text-slate-700">${item.Kategori || '-'}</td>
-          <td class="py-3 px-4 text-slate-500 max-w-xs truncate">${item.Catatan || '-'}</td>
-          <td class="py-3 px-4 text-right font-extrabold whitespace-nowrap ${isSetor ? 'text-emerald-600' : 'text-rose-600'}">
+          <td class="py-3 px-4 font-medium text-slate-700 x-k">${item.Kategori || '-'}</td>
+          <td class="py-3 px-4 text-slate-500 max-w-xs truncate x-c">${item.Catatan || '-'}</td>
+          <td class="x-n py-3 px-4 text-right font-extrabold whitespace-nowrap ${isSetor ? 'text-emerald-600' : 'text-rose-600'}">
             ${isSetor ? '+' : '-'} ${formatRupiah(item.Nominal)}
           </td>
         </tr>
@@ -1494,9 +1560,13 @@ function renderCharts() {
   });
 
   const ctxCashflow = document.getElementById('cashflowChart').getContext('2d');
-  if (appState.charts.cashflow) appState.charts.cashflow.destroy();
-
-  appState.charts.cashflow = new Chart(ctxCashflow, {
+  const cf = appState.charts.cashflow;
+  if (cf) {
+    cf.data.labels = labels6M;
+    cf.data.datasets[0].data = setorSeries;
+    cf.data.datasets[1].data = tarikSeries;
+    cf.update('none');
+  } else appState.charts.cashflow = new Chart(ctxCashflow, {
     type: 'bar',
     data: {
       labels: labels6M,
@@ -1559,9 +1629,13 @@ function renderCharts() {
   const catValues = Object.values(catMap);
 
   const ctxCat = document.getElementById('categoryChart').getContext('2d');
-  if (appState.charts.category) appState.charts.category.destroy();
-
-  appState.charts.category = new Chart(ctxCat, {
+  const ct = appState.charts.category;
+  if (ct) {
+    ct.data.labels = catLabels.length ? catLabels : ['Belum Ada Setoran'];
+    ct.data.datasets[0].data = catValues.length ? catValues : [1];
+    ct.data.datasets[0].backgroundColor = catValues.length ? ['#059669', '#0284c7', '#7c3aed', '#f59e0b', '#ec4899', '#14b8a6', '#64748b'] : ['#e2e8f0'];
+    ct.update('none');
+  } else appState.charts.category = new Chart(ctxCat, {
     type: 'doughnut',
     data: {
       labels: catLabels.length ? catLabels : ['Belum Ada Setoran'],
@@ -1585,7 +1659,7 @@ function renderCharts() {
         },
         tooltip: {
           callbacks: {
-            label: (ctx) => catValues.length ? `${ctx.label}: ${formatRupiah(ctx.raw)}` : 'Belum ada data'
+            label: (ctx) => ctx.label === 'Belum Ada Setoran' ? 'Belum ada data' : `${ctx.label}: ${formatRupiah(ctx.raw)}`
           }
         }
       }
@@ -1648,10 +1722,7 @@ function getFilteredTransactions() {
   const kategori = document.getElementById('filter-kategori').value;
   const bulan = document.getElementById('filter-bulan').value;
 
-  // Urutkan terlebih dahulu agar transaksi terbaru selalu di paling atas
-  const sortedAll = sortTransactionsNewestFirst(appState.transactions);
-
-  return sortedAll.filter(item => {
+  return appState.transactions.filter(item => {
     if (jenis !== 'ALL' && item.Jenis !== jenis) return false;
     if (kategori !== 'ALL' && item.Kategori !== kategori) return false;
     if (bulan && !String(item.Tanggal).startsWith(bulan)) return false;
@@ -1694,29 +1765,29 @@ function renderTransactionsTable() {
     const isSetor = item.Jenis === 'Setor';
     return `
       <tr class="hover:bg-slate-50/90 transition">
-        <td class="py-3.5 px-4 whitespace-nowrap">
+        <td class="py-3.5 px-4 whitespace-nowrap x-d">
           <span class="font-bold text-slate-800 block">${formatDateIndo(item.Tanggal)}</span>
           <span class="text-[10px] font-mono text-slate-400">${item.ID_Transaksi}</span>
         </td>
-        <td class="py-3.5 px-4">
+        <td class="py-3.5 px-4 x-j">
           <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${isSetor ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : 'bg-rose-50 text-rose-700 border border-rose-200/60'}">
             <i class="fa-solid ${isSetor ? 'fa-circle-plus' : 'fa-circle-minus'}"></i>
             ${item.Jenis}
           </span>
         </td>
-        <td class="py-3.5 px-4 font-semibold text-slate-700">${item.Kategori || '-'}</td>
-        <td class="py-3.5 px-4 text-slate-600 max-w-xs">${item.Catatan || '-'}</td>
-        <td class="py-3.5 px-4 text-right font-extrabold whitespace-nowrap ${isSetor ? 'text-emerald-600' : 'text-rose-600'}">
+        <td class="py-3.5 px-4 font-semibold text-slate-700 x-k">${item.Kategori || '-'}</td>
+        <td class="py-3.5 px-4 text-slate-600 max-w-xs x-c">${item.Catatan || '-'}</td>
+        <td class="x-n py-3.5 px-4 text-right font-extrabold whitespace-nowrap ${isSetor ? 'text-emerald-600' : 'text-rose-600'}">
           ${isSetor ? '+' : '-'} ${formatRupiah(item.Nominal)}
         </td>
-        <td class="py-3.5 px-4 text-center whitespace-nowrap no-print">
+        <td class="py-3.5 px-4 text-center whitespace-nowrap no-print x-a">
           <div class="inline-flex items-center gap-1.5">
             <button type="button" onclick="openEditTransactionModal('${item.ID_Transaksi}')" title="Edit Transaksi"
-              class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-600 text-slate-600 hover:text-white transition flex items-center justify-center text-xs">
+              class="w-9 h-9 md:w-8 md:h-8 rounded-lg bg-slate-100 hover:bg-emerald-600 text-slate-600 hover:text-white transition flex items-center justify-center text-xs">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             <button type="button" onclick="confirmDeleteTransaction('${item.ID_Transaksi}')" title="Hapus Transaksi"
-              class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white transition flex items-center justify-center text-xs">
+              class="w-9 h-9 md:w-8 md:h-8 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white transition flex items-center justify-center text-xs">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -1768,7 +1839,7 @@ window.confirmDeleteTransaction = function(id) {
       const res = await callBackend('deleteTransaction', { id });
       hideLoader();
       if (res.status === 'success') {
-        appState.transactions = sortTransactionsNewestFirst(res.transactions || []);
+        syncTrx(res);
         renderAllViews();
         showToast(res.message, 'success');
       } else {
@@ -1808,21 +1879,21 @@ function renderKategoriView() {
 
     return `
       <tr class="hover:bg-slate-50/90 transition">
-        <td class="py-3.5 px-4 font-bold text-slate-800">${item.Nama_Kategori}</td>
-        <td class="py-3.5 px-4">
+        <td class="py-3.5 px-4 font-bold text-slate-800 x-d">${item.Nama_Kategori}</td>
+        <td class="py-3.5 px-4 x-j">
           <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${badgeClass}">
             ${item.Jenis === 'Semua' ? 'Semua (Setor & Tarik)' : item.Jenis}
           </span>
         </td>
-        <td class="py-3.5 px-4 text-center font-semibold text-slate-600">${usedCount}x Transaksi</td>
-        <td class="py-3.5 px-4 text-center whitespace-nowrap">
+        <td class="py-3.5 px-4 text-center font-semibold text-slate-600 x-k">${usedCount}x Transaksi</td>
+        <td class="py-3.5 px-4 text-center whitespace-nowrap x-a">
           <div class="inline-flex items-center gap-1.5">
             <button type="button" onclick="openEditCategory('${item.ID_Kategori}')" title="Edit Kategori"
-              class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-600 text-slate-600 hover:text-white transition flex items-center justify-center text-xs">
+              class="w-9 h-9 md:w-8 md:h-8 rounded-lg bg-slate-100 hover:bg-emerald-600 text-slate-600 hover:text-white transition flex items-center justify-center text-xs">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             <button type="button" onclick="confirmDeleteCategory('${item.ID_Kategori}')" title="Hapus Kategori"
-              class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white transition flex items-center justify-center text-xs">
+              class="w-9 h-9 md:w-8 md:h-8 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white transition flex items-center justify-center text-xs">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -1868,7 +1939,7 @@ window.confirmDeleteCategory = function(id) {
       const res = await callBackend('deleteCategory', { id });
       hideLoader();
       if (res.status === 'success') {
-        appState.categories = sortCategoriesAZ(res.categories || []);
+        syncKat(res);
         resetCategoryForm();
         renderAllViews();
         showToast(res.message, 'success');
@@ -1884,7 +1955,7 @@ window.confirmDeleteCategory = function(id) {
 // ==========================================
 function renderBackupView() {
   document.getElementById('backup-total-records').textContent = `${appState.transactions.length} Transaksi`;
-  document.getElementById('backup-last-date').textContent = getDisplayBackupTime();
+  document.getElementById('backup-last-date').textContent = getNowTimestampIndo();
   document.getElementById('backup-status-mode').textContent = IS_PREVIEW
     ? 'Database Lokal (Mode Preview)'
     : 'Terhubung ke Google Sheets';
@@ -1926,14 +1997,13 @@ async function handleDownloadJsonBackup() {
 
   const res = await callBackend('recordBackup', { backupTime });
   if (res.status === 'success' && appState.currentUser) {
-    appState.currentUser.Terakhir_Backup = backupTime;
     saveSessionLocal();
     renderAllViews();
   }
   showToast('File Full Backup (.JSON) berhasil diunduh!', 'success');
 }
 
-function handleDownloadExcelExport(onlyFiltered = false) {
+async function handleDownloadExcelExport(onlyFiltered = false) {
   const rowsData = onlyFiltered ? getFilteredTransactions() : sortTransactionsNewestFirst(appState.transactions);
   if (rowsData.length === 0) {
     showToast('Tidak ada data transaksi untuk diekspor ke Excel.', 'warning');
@@ -1954,7 +2024,10 @@ function handleDownloadExcelExport(onlyFiltered = false) {
     'Waktu Input': r.Created_At || ''
   }));
 
-  if (typeof XLSX !== 'undefined') {
+  showLoader('Menyiapkan file Excel...');
+  const xlsxOk = await loadXlsx();
+  hideLoader();
+  if (xlsxOk) {
     const worksheet = XLSX.utils.json_to_sheet(formattedRows);
     worksheet['!cols'] = [
       { wch: 6 },
@@ -1971,7 +2044,7 @@ function handleDownloadExcelExport(onlyFiltered = false) {
     XLSX.writeFile(workbook, fileName);
     showToast('File Excel (.XLSX) berhasil diunduh!', 'success');
   } else {
-    showToast('Pustaka Excel sedang dimuat, silakan coba sesaat lagi.', 'warning');
+    showToast('Gagal memuat pustaka Excel. Periksa koneksi internet.', 'warning');
   }
 }
 
@@ -1980,12 +2053,12 @@ function handleDownloadExcelExport(onlyFiltered = false) {
 // ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
   initPreviewStorage();
+  if (!IS_PREVIEW) fetch(GAS_URL, { mode: 'no-cors' }).catch(() => {}); // pemanasan GAS saat user mengetik login
 
   // Perbarui tampilan waktu Hari ini di sidebar secara real-time setiap 15 detik
   setInterval(() => {
-    if (appState.currentUser) {
+    if (appState.currentUser && !document.hidden) {
       const nowTime = getNowTimestampIndo();
-      appState.currentUser.Terakhir_Backup = nowTime;
       const sidebarEl = document.getElementById('sidebar-last-backup');
       const backupEl = document.getElementById('backup-last-date');
       if (sidebarEl) sidebarEl.textContent = nowTime;
@@ -2041,17 +2114,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideLoader();
 
     if (res.status === 'success') {
-      appState.currentUser = {
-        ...res.user,
-        Terakhir_Backup: getNowTimestampIndo()
-      };
+      appState.token = res.token || null;
+      appState.currentUser = { ...res.user };
       appState.transactions = sortTransactionsNewestFirst(Array.isArray(res.transactions) ? res.transactions : []);
       appState.categories = sortCategoriesAZ(Array.isArray(res.categories) ? res.categories : INITIAL_DUMMY_CATEGORIES);
       saveSessionLocal();
 
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
-      renderAllViews();
+      renderSidebar();
       switchMenu('dashboard');
       showToast(`Selamat datang kembali, ${appState.currentUser.Nama_Lengkap}!`, 'success');
     } else {
@@ -2109,7 +2180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideLoader();
 
     if (res.status === 'success') {
-      appState.categories = sortCategoriesAZ(res.categories || []);
+      syncKat(res);
       resetCategoryForm();
       renderAllViews();
       showToast(res.message || 'Kategori berhasil disimpan!', 'success');
@@ -2128,8 +2199,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       confirmText: 'Ya, Keluar',
       type: 'danger',
       onConfirm: () => {
+        callBackend('logout');
         sessionStorage.removeItem(STORAGE_KEYS.SESSION);
         appState.currentUser = null;
+        appState.token = null;
         document.getElementById('app-screen').classList.add('hidden');
         document.getElementById('login-screen').classList.remove('hidden');
         document.getElementById('login-password').value = '';
@@ -2141,26 +2214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('btn-logout-mobile').addEventListener('click', handleLogout);
 
   // Tombol Refresh / Sinkronkan Data
-  document.getElementById('btn-refresh-data').addEventListener('click', async () => {
-    showLoader('Menyinkronkan database...');
-    const res = await callBackend('getInitialData', { username: appState.currentUser?.Username || 'admin' });
-    hideLoader();
-    if (res.status === 'success') {
-      appState.currentUser = {
-        ...res.user,
-        Terakhir_Backup: getNowTimestampIndo()
-      };
-      appState.transactions = sortTransactionsNewestFirst(res.transactions || []);
-      if (Array.isArray(res.categories)) {
-        appState.categories = sortCategoriesAZ(res.categories);
-      }
-      saveSessionLocal();
-      renderAllViews();
-      showToast('Data berhasil disinkronkan!', 'success');
-    } else {
-      showToast(res.message || 'Gagal menyinkronkan data.', 'error');
-    }
-  });
+  document.getElementById('btn-refresh-data').addEventListener('click', () => refreshData());
 
   // Tombol Buka & Tutup Modal Transaksi
   document.getElementById('btn-quick-add-top').addEventListener('click', openAddTransactionModal);
@@ -2206,7 +2260,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideLoader();
 
     if (res.status === 'success') {
-      appState.transactions = sortTransactionsNewestFirst(res.transactions || []);
+      syncTrx(res);
       document.getElementById('modal-transaksi').classList.add('hidden');
       renderAllViews();
       showToast(res.message || 'Transaksi berhasil disimpan!', 'success');
@@ -2216,8 +2270,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // Event Filter Transaksi
-  ['filter-search', 'filter-jenis', 'filter-kategori', 'filter-bulan'].forEach(id => {
-    document.getElementById(id).addEventListener('input', renderTransactionsTable);
+  let filterTimer;
+  document.getElementById('filter-search').addEventListener('input', () => {
+    clearTimeout(filterTimer);
+    filterTimer = setTimeout(renderTransactionsTable, 150);
+  });
+  ['filter-jenis', 'filter-kategori', 'filter-bulan'].forEach(id => {
     document.getElementById(id).addEventListener('change', renderTransactionsTable);
   });
 
@@ -2276,7 +2334,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         appState.pendingRestoreData = {
-          profile: parsed.profile || null,
           categories: Array.isArray(parsed.categories) ? parsed.categories : [],
           transactions: validRows
         };
@@ -2317,7 +2374,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         showLoader('Memulihkan database ke server...');
         const res = await callBackend('restoreData', {
           mode,
-          profile: appState.pendingRestoreData.profile,
           categories: appState.pendingRestoreData.categories,
           transactions: appState.pendingRestoreData.transactions
         });
@@ -2325,12 +2381,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (res.status === 'success') {
           if (res.user) {
-            appState.currentUser = {
-              ...res.user,
-              Terakhir_Backup: getNowTimestampIndo()
-            };
+            appState.currentUser = { ...res.user };
           }
-          appState.transactions = sortTransactionsNewestFirst(res.transactions || []);
+          syncTrx(res);
           if (Array.isArray(res.categories)) {
             appState.categories = sortCategoriesAZ(res.categories);
           }
@@ -2383,29 +2436,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Cek apakah ada sesi login yang masih aktif
-  const savedSession = sessionStorage.getItem(STORAGE_KEYS.SESSION);
-  if (savedSession) {
-    try {
-      const parsedUser = JSON.parse(savedSession);
-      showLoader('Memuat sesi tabungan...');
-      const res = await callBackend('getInitialData', { username: parsedUser.Username });
-      hideLoader();
-      if (res.status === 'success') {
-        appState.currentUser = {
-          ...res.user,
-          Terakhir_Backup: getNowTimestampIndo()
-        };
-        appState.transactions = sortTransactionsNewestFirst(res.transactions || []);
-        appState.categories = sortCategoriesAZ(Array.isArray(res.categories) ? res.categories : INITIAL_DUMMY_CATEGORIES);
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-screen').classList.remove('hidden');
-        renderAllViews();
-        switchMenu('dashboard');
-      }
-    } catch (e) {
-      sessionStorage.removeItem(STORAGE_KEYS.SESSION);
-    }
+  // Sesi aktif: tampilkan data cache seketika, lalu sinkronkan diam-diam di latar belakang
+  try {
+    const s = JSON.parse(sessionStorage.getItem(STORAGE_KEYS.SESSION) || 'null');
+    if (s && s.user && s.token && Array.isArray(s.transactions)) {
+      appState.token = s.token;
+      appState.currentUser = s.user;
+      appState.transactions = s.transactions;
+      appState.categories = Array.isArray(s.categories) ? s.categories : [];
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app-screen').classList.remove('hidden');
+      renderSidebar();
+      switchMenu('dashboard');
+      refreshData(true);
+    } else sessionStorage.removeItem(STORAGE_KEYS.SESSION);
+  } catch (e) {
+    sessionStorage.removeItem(STORAGE_KEYS.SESSION);
   }
 });
 </script>
